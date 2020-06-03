@@ -3,23 +3,8 @@ GO
 
 USE [MAICOGROUP]
 GO
-/****** Object:  Table [dbo].[CanHo]    Script Date: 6/2/2020 10:31:56 AM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [dbo].[CanHo](
-	[MaCanHo] [varchar](10) NOT NULL,
-	[TenCanHo] [nvarchar](30) NOT NULL,
-	[DiaChi] [nvarchar](80) NOT NULL,
-	[CanHo_Regex] [varchar](50) NULL,
-PRIMARY KEY CLUSTERED 
-(
-	[MaCanHo] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
-) ON [PRIMARY]
-GO
-/****** Object:  Table [dbo].[ChamCong]    Script Date: 6/2/2020 10:31:56 AM ******/
+
+/****** Object:  Table [dbo].[ChamCong]    Script Date: 6/3/2020 2:43:41 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -36,7 +21,7 @@ CREATE TABLE [dbo].[ChamCong](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[ChiNhanh]    Script Date: 6/2/2020 10:31:56 AM ******/
+/****** Object:  Table [dbo].[ChiNhanh]    Script Date: 6/3/2020 2:43:42 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -44,14 +29,14 @@ GO
 CREATE TABLE [dbo].[ChiNhanh](
 	[MaChiNhanh] [varchar](10) NOT NULL,
 	[TenChiNhanh] [nvarchar](25) NOT NULL,
-	[DiaChi] [nvarchar](80) NOT NULL,
+	[MaDiaChi] [varchar](10) NOT NULL,
 PRIMARY KEY CLUSTERED 
 (
 	[MaChiNhanh] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[ChiTiet_DonHang]    Script Date: 6/2/2020 10:31:56 AM ******/
+/****** Object:  Table [dbo].[ChiTiet_DonHang]    Script Date: 6/3/2020 2:43:42 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -69,7 +54,7 @@ CREATE TABLE [dbo].[ChiTiet_DonHang](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[ChiTiet_NhanVien]    Script Date: 6/2/2020 10:31:56 AM ******/
+/****** Object:  Table [dbo].[ChiTiet_NhanVien]    Script Date: 6/3/2020 2:43:42 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -79,10 +64,11 @@ CREATE TABLE [dbo].[ChiTiet_NhanVien](
 	[MaChiNhanh] [varchar](10) NOT NULL,
 	[MaPhongBan] [varchar](10) NOT NULL,
 	[ChucDanh] [nvarchar](20) NOT NULL,
-	[CheDo] [varchar](10) NOT NULL,
+	[Full_Part] [bit] NOT NULL,
 	[NguoiQuanLy] [varchar](10) NOT NULL,
 	[NgayBatDau] [date] NOT NULL,
 	[NgayKetThuc] [date] NULL,
+	[CheDo] [bit] NOT NULL,
  CONSTRAINT [pk_ChiTiet_NhanVien] PRIMARY KEY CLUSTERED 
 (
 	[MaNV] ASC,
@@ -90,26 +76,7 @@ CREATE TABLE [dbo].[ChiTiet_NhanVien](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[ChiTietCanHoVaNhuCau]    Script Date: 6/2/2020 10:31:56 AM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [dbo].[ChiTietCanHoVaNhuCau](
-	[MaChiTiet] [varchar](10) NOT NULL,
-	[DienTich] [tinyint] NULL,
-	[MoiHayCu] [bit] NULL,
-	[Huong] [nvarchar](10) NULL,
-	[Vieww] [nvarchar](60) NULL,
-	[PN] [tinyint] NULL,
-	[WC] [tinyint] NULL,
-PRIMARY KEY CLUSTERED 
-(
-	[MaChiTiet] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
-) ON [PRIMARY]
-GO
-/****** Object:  Table [dbo].[ChiTietDoiTuong]    Script Date: 6/2/2020 10:31:56 AM ******/
+/****** Object:  Table [dbo].[ChiTietDoiTuong]    Script Date: 6/3/2020 2:43:42 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -124,7 +91,27 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[ChiTietSP]    Script Date: 6/2/2020 10:31:56 AM ******/
+/****** Object:  Table [dbo].[ChiTietNhuCau]    Script Date: 6/3/2020 2:43:42 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[ChiTietNhuCau](
+	[MaChiTiet] [varchar](10) NOT NULL,
+	[DienTich] [tinyint] NULL,
+	[MoiHayCu] [bit] NULL,
+	[Huong] [nvarchar](10) NULL,
+	[Vieww] [nvarchar](60) NULL,
+	[PN] [tinyint] NULL,
+	[WC] [tinyint] NULL,
+	[TangCaoThap] [bit] NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[MaChiTiet] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[ChiTietSP]    Script Date: 6/3/2020 2:43:42 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -132,13 +119,13 @@ GO
 CREATE TABLE [dbo].[ChiTietSP](
 	[MaSP] [varchar](10) NOT NULL,
 	[NgayGio] [date] NOT NULL,
-	[GiayToPhapLy] [nvarchar](30) NULL,
+	[GiayToPhapLy] [nvarchar](1) NOT NULL,
 	[TinhTrang] [nvarchar](50) NULL,
-	[Gia] [money] NULL,
+	[Gia] [money] NOT NULL,
 	[MaNoiThat] [varchar](10) NOT NULL,
 	[MoiHayCu] [bit] NULL,
-	[BanHayChoThue] [bit] NULL,
-	[ChuSoHuu] [varchar](10) NULL,
+	[BanHayChoThue] [bit] NOT NULL,
+	[ChuSoHuu] [varchar](10) NOT NULL,
  CONSTRAINT [pk_ChiTietSP] PRIMARY KEY CLUSTERED 
 (
 	[MaSP] ASC,
@@ -146,7 +133,7 @@ CREATE TABLE [dbo].[ChiTietSP](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[ChiTietThanhToan]    Script Date: 6/2/2020 10:31:56 AM ******/
+/****** Object:  Table [dbo].[ChiTietThanhToan]    Script Date: 6/3/2020 2:43:42 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -162,7 +149,7 @@ CREATE TABLE [dbo].[ChiTietThanhToan](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[CongViec]    Script Date: 6/2/2020 10:31:56 AM ******/
+/****** Object:  Table [dbo].[CongViec]    Script Date: 6/3/2020 2:43:42 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -184,7 +171,7 @@ CREATE TABLE [dbo].[CongViec](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[DatLich_XemNha]    Script Date: 6/2/2020 10:31:56 AM ******/
+/****** Object:  Table [dbo].[DatLich_XemNha]    Script Date: 6/3/2020 2:43:42 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -201,7 +188,24 @@ CREATE TABLE [dbo].[DatLich_XemNha](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[DonHang]    Script Date: 6/2/2020 10:31:56 AM ******/
+/****** Object:  Table [dbo].[DiaChi]    Script Date: 6/3/2020 2:43:42 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[DiaChi](
+	[MaDiaChi] [varchar](10) NOT NULL,
+	[SoNha_TenDuong] [nvarchar](150) NOT NULL,
+	[Phuong] [nvarchar](30) NOT NULL,
+	[Quan] [nvarchar](30) NOT NULL,
+	[ThanhPho_Tinh] [nvarchar](30) NOT NULL,
+ CONSTRAINT [pk_DiaChi_MaDiaChi] PRIMARY KEY CLUSTERED 
+(
+	[MaDiaChi] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[DonHang]    Script Date: 6/3/2020 2:43:42 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -211,31 +215,34 @@ CREATE TABLE [dbo].[DonHang](
 	[MaSP] [varchar](10) NOT NULL,
 	[NgayGio] [date] NOT NULL,
 	[MaKH] [varchar](10) NULL,
+	[MaThanhToan] [varchar](10) NOT NULL,
  CONSTRAINT [pk_DonHang] PRIMARY KEY CLUSTERED 
 (
 	[MaDH] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
-) ON [PRIMARY]
-GO
-/****** Object:  Table [dbo].[DonHang_ThanhToan]    Script Date: 6/2/2020 10:31:56 AM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [dbo].[DonHang_ThanhToan](
-	[MaDH] [varchar](10) NOT NULL,
-	[MaThanhToan] [varchar](10) NOT NULL,
- CONSTRAINT [pk_DonHang_ThanhToan] PRIMARY KEY CLUSTERED 
-(
-	[MaDH] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY],
- CONSTRAINT [uq_DonHang_ThanhToan_MaThanhToan] UNIQUE NONCLUSTERED 
+UNIQUE NONCLUSTERED 
 (
 	[MaThanhToan] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[HoSoPhapLy]    Script Date: 6/2/2020 10:31:56 AM ******/
+/****** Object:  Table [dbo].[Du_An]    Script Date: 6/3/2020 2:43:42 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Du_An](
+	[MaDuAn] [varchar](10) NOT NULL,
+	[TenCanHo] [nvarchar](30) NOT NULL,
+	[MaDiaChi] [varchar](10) NOT NULL,
+	[DuAn_Regex] [varchar](50) NULL,
+ CONSTRAINT [pk_Du_An] PRIMARY KEY CLUSTERED 
+(
+	[MaDuAn] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[HoSoPhapLy]    Script Date: 6/3/2020 2:43:42 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -246,14 +253,14 @@ CREATE TABLE [dbo].[HoSoPhapLy](
 	[MaSP] [varchar](10) NOT NULL,
 	[MaKH] [varchar](10) NOT NULL,
 	[NhanVienPhapLy] [varchar](10) NOT NULL,
-	[Sale] [varchar](10) NOT NULL,
+	[NhanVienChotDon] [varchar](10) NOT NULL,
 PRIMARY KEY CLUSTERED 
 (
 	[MaHoSo] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[KhachChuaKhaiThac]    Script Date: 6/2/2020 10:31:56 AM ******/
+/****** Object:  Table [dbo].[KhachChuaKhaiThac]    Script Date: 6/3/2020 2:43:42 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -269,27 +276,26 @@ CREATE TABLE [dbo].[KhachChuaKhaiThac](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[KhachHang]    Script Date: 6/2/2020 10:31:56 AM ******/
+/****** Object:  Table [dbo].[KhachHang]    Script Date: 6/3/2020 2:43:42 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[KhachHang](
 	[MaKH] [varchar](10) NOT NULL,
-	[Ten] [nvarchar](50) NOT NULL,
+	[Ten] [nvarchar](50) NULL,
 	[SDT] [varchar](10) NOT NULL,
 	[NgayTao] [date] NULL,
 	[NguoiTao] [varchar](10) NOT NULL,
 	[SoTuongTac] [tinyint] NULL,
 	[LanTuongTacCuoi] [date] NULL,
-	[MaCanHo] [varchar](10) NOT NULL,
 PRIMARY KEY CLUSTERED 
 (
 	[MaKH] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[KhaiThacKhachMuaVaThue]    Script Date: 6/2/2020 10:31:56 AM ******/
+/****** Object:  Table [dbo].[KhaiThacKhachMuaVaThue]    Script Date: 6/3/2020 2:43:42 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -300,12 +306,12 @@ CREATE TABLE [dbo].[KhaiThacKhachMuaVaThue](
 	[ThoiGian] [datetime] NOT NULL,
 	[CapThiet] [tinyint] NOT NULL,
 	[TaiChinh] [money] NOT NULL,
-	[TangCaoThap] [bit] NOT NULL,
 	[MaNoiThat] [varchar](10) NOT NULL,
 	[MaChiTiet] [varchar](10) NOT NULL,
 	[NhanDinh] [nvarchar](300) NULL,
 	[TinhTrang] [nvarchar](50) NULL,
 	[BanHayThue] [bit] NULL,
+	[MaDuAn] [varchar](10) NOT NULL,
  CONSTRAINT [pk_ChiTietKhachMuaVaThue] PRIMARY KEY CLUSTERED 
 (
 	[MaNV] ASC,
@@ -314,7 +320,7 @@ CREATE TABLE [dbo].[KhaiThacKhachMuaVaThue](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[LichLamViec]    Script Date: 6/2/2020 10:31:56 AM ******/
+/****** Object:  Table [dbo].[LichLamViec]    Script Date: 6/3/2020 2:43:42 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -322,7 +328,9 @@ GO
 CREATE TABLE [dbo].[LichLamViec](
 	[Ngay] [date] NOT NULL,
 	[MaNV] [varchar](10) NOT NULL,
-	[CaLam] [nvarchar](10) NOT NULL,
+	[Sang] [bit] NULL,
+	[Chieu] [bit] NULL,
+	[Toi] [bit] NULL,
  CONSTRAINT [pk_LichLamViec] PRIMARY KEY CLUSTERED 
 (
 	[Ngay] ASC,
@@ -330,7 +338,7 @@ CREATE TABLE [dbo].[LichLamViec](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[NhanVien]    Script Date: 6/2/2020 10:31:56 AM ******/
+/****** Object:  Table [dbo].[NhanVien]    Script Date: 6/3/2020 2:43:42 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -347,7 +355,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[NoiThat]    Script Date: 6/2/2020 10:31:56 AM ******/
+/****** Object:  Table [dbo].[NoiThat]    Script Date: 6/3/2020 2:43:42 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -368,7 +376,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[PhiVaThueSP]    Script Date: 6/2/2020 10:31:56 AM ******/
+/****** Object:  Table [dbo].[PhiVaThueSP]    Script Date: 6/3/2020 2:43:42 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -385,7 +393,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[PhongBan]    Script Date: 6/2/2020 10:31:56 AM ******/
+/****** Object:  Table [dbo].[PhongBan]    Script Date: 6/3/2020 2:43:42 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -399,14 +407,14 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[SanPham]    Script Date: 6/2/2020 10:31:56 AM ******/
+/****** Object:  Table [dbo].[SanPham]    Script Date: 6/3/2020 2:43:42 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[SanPham](
 	[MaSP] [varchar](10) NOT NULL,
-	[MaCanHo] [varchar](10) NOT NULL,
+	[MaDuAn] [varchar](10) NOT NULL,
 	[MaCan] [nvarchar](10) NOT NULL,
 	[Anh] [image] NULL,
 	[GhiChu] [nvarchar](300) NULL,
@@ -422,7 +430,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Telesale]    Script Date: 6/2/2020 10:31:56 AM ******/
+/****** Object:  Table [dbo].[Telesale]    Script Date: 6/3/2020 2:43:42 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -442,7 +450,7 @@ CREATE TABLE [dbo].[Telesale](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[TinhTrangHoSoPhapLy]    Script Date: 6/2/2020 10:31:56 AM ******/
+/****** Object:  Table [dbo].[TinhTrangHoSoPhapLy]    Script Date: 6/3/2020 2:43:42 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -483,6 +491,11 @@ ALTER TABLE [dbo].[ChamCong]  WITH CHECK ADD  CONSTRAINT [fk_ChamCong] FOREIGN K
 REFERENCES [dbo].[NhanVien] ([MaNV])
 GO
 ALTER TABLE [dbo].[ChamCong] CHECK CONSTRAINT [fk_ChamCong]
+GO
+ALTER TABLE [dbo].[ChiNhanh]  WITH CHECK ADD  CONSTRAINT [fk_ChiNhanh_MaDiaChi] FOREIGN KEY([MaDiaChi])
+REFERENCES [dbo].[DiaChi] ([MaDiaChi])
+GO
+ALTER TABLE [dbo].[ChiNhanh] CHECK CONSTRAINT [fk_ChiNhanh_MaDiaChi]
 GO
 ALTER TABLE [dbo].[ChiTiet_DonHang]  WITH CHECK ADD  CONSTRAINT [fk_ChiTiet_DonHang] FOREIGN KEY([MaDH])
 REFERENCES [dbo].[DonHang] ([MaDH])
@@ -535,7 +548,7 @@ GO
 ALTER TABLE [dbo].[ChiTietSP] CHECK CONSTRAINT [fk_MaNoiThat]
 GO
 ALTER TABLE [dbo].[ChiTietThanhToan]  WITH CHECK ADD  CONSTRAINT [fk_ChiTietThanhToan_MaThanhToan] FOREIGN KEY([MaThanhToan])
-REFERENCES [dbo].[DonHang_ThanhToan] ([MaThanhToan])
+REFERENCES [dbo].[DonHang] ([MaThanhToan])
 GO
 ALTER TABLE [dbo].[ChiTietThanhToan] CHECK CONSTRAINT [fk_ChiTietThanhToan_MaThanhToan]
 GO
@@ -574,10 +587,10 @@ REFERENCES [dbo].[SanPham] ([MaSP])
 GO
 ALTER TABLE [dbo].[DonHang] CHECK CONSTRAINT [fk_DonHang_MaSP]
 GO
-ALTER TABLE [dbo].[DonHang_ThanhToan]  WITH CHECK ADD  CONSTRAINT [fk_DonHang_ThanhToan_MaDH] FOREIGN KEY([MaDH])
-REFERENCES [dbo].[DonHang] ([MaDH])
+ALTER TABLE [dbo].[Du_An]  WITH CHECK ADD  CONSTRAINT [fk_Du_An_MaDiaChi] FOREIGN KEY([MaDiaChi])
+REFERENCES [dbo].[DiaChi] ([MaDiaChi])
 GO
-ALTER TABLE [dbo].[DonHang_ThanhToan] CHECK CONSTRAINT [fk_DonHang_ThanhToan_MaDH]
+ALTER TABLE [dbo].[Du_An] CHECK CONSTRAINT [fk_Du_An_MaDiaChi]
 GO
 ALTER TABLE [dbo].[HoSoPhapLy]  WITH CHECK ADD  CONSTRAINT [fk_HoSoPhapLy_MaKH] FOREIGN KEY([MaKH])
 REFERENCES [dbo].[KhachHang] ([MaKH])
@@ -594,7 +607,7 @@ REFERENCES [dbo].[NhanVien] ([MaNV])
 GO
 ALTER TABLE [dbo].[HoSoPhapLy] CHECK CONSTRAINT [fk_HoSoPhapLy_NhanVienPhapLy]
 GO
-ALTER TABLE [dbo].[HoSoPhapLy]  WITH CHECK ADD  CONSTRAINT [fk_HoSoPhapLy_Sale] FOREIGN KEY([Sale])
+ALTER TABLE [dbo].[HoSoPhapLy]  WITH CHECK ADD  CONSTRAINT [fk_HoSoPhapLy_Sale] FOREIGN KEY([NhanVienChotDon])
 REFERENCES [dbo].[NhanVien] ([MaNV])
 GO
 ALTER TABLE [dbo].[HoSoPhapLy] CHECK CONSTRAINT [fk_HoSoPhapLy_Sale]
@@ -604,18 +617,18 @@ REFERENCES [dbo].[KhachHang] ([MaKH])
 GO
 ALTER TABLE [dbo].[KhachChuaKhaiThac] CHECK CONSTRAINT [fk_KhachChuaKhaiThac]
 GO
-ALTER TABLE [dbo].[KhachHang]  WITH CHECK ADD  CONSTRAINT [fk_KhachHang_MaCanHo] FOREIGN KEY([MaCanHo])
-REFERENCES [dbo].[CanHo] ([MaCanHo])
-GO
-ALTER TABLE [dbo].[KhachHang] CHECK CONSTRAINT [fk_KhachHang_MaCanHo]
-GO
 ALTER TABLE [dbo].[KhachHang]  WITH CHECK ADD  CONSTRAINT [fk_KhachHang_NguoiTao] FOREIGN KEY([NguoiTao])
 REFERENCES [dbo].[NhanVien] ([MaNV])
 GO
 ALTER TABLE [dbo].[KhachHang] CHECK CONSTRAINT [fk_KhachHang_NguoiTao]
 GO
+ALTER TABLE [dbo].[KhaiThacKhachMuaVaThue]  WITH CHECK ADD  CONSTRAINT [fk_KhaiThac_MaDuAn] FOREIGN KEY([MaDuAn])
+REFERENCES [dbo].[Du_An] ([MaDuAn])
+GO
+ALTER TABLE [dbo].[KhaiThacKhachMuaVaThue] CHECK CONSTRAINT [fk_KhaiThac_MaDuAn]
+GO
 ALTER TABLE [dbo].[KhaiThacKhachMuaVaThue]  WITH CHECK ADD  CONSTRAINT [fk_KhaiThacKhachMuaVaBan_MaChiTiet] FOREIGN KEY([MaChiTiet])
-REFERENCES [dbo].[ChiTietCanHoVaNhuCau] ([MaChiTiet])
+REFERENCES [dbo].[ChiTietNhuCau] ([MaChiTiet])
 GO
 ALTER TABLE [dbo].[KhaiThacKhachMuaVaThue] CHECK CONSTRAINT [fk_KhaiThacKhachMuaVaBan_MaChiTiet]
 GO
@@ -644,10 +657,10 @@ REFERENCES [dbo].[SanPham] ([MaSP])
 GO
 ALTER TABLE [dbo].[PhiVaThueSP] CHECK CONSTRAINT [fk_PhiVaThueSP_MaSP]
 GO
-ALTER TABLE [dbo].[SanPham]  WITH CHECK ADD  CONSTRAINT [fk_SanPham_MaCanHo] FOREIGN KEY([MaCanHo])
-REFERENCES [dbo].[CanHo] ([MaCanHo])
+ALTER TABLE [dbo].[SanPham]  WITH CHECK ADD  CONSTRAINT [fk_SanPham_MaDuAn] FOREIGN KEY([MaDuAn])
+REFERENCES [dbo].[Du_An] ([MaDuAn])
 GO
-ALTER TABLE [dbo].[SanPham] CHECK CONSTRAINT [fk_SanPham_MaCanHo]
+ALTER TABLE [dbo].[SanPham] CHECK CONSTRAINT [fk_SanPham_MaDuAn]
 GO
 ALTER TABLE [dbo].[Telesale]  WITH CHECK ADD  CONSTRAINT [fk_Telesale_MaKH] FOREIGN KEY([MaKH])
 REFERENCES [dbo].[KhachHang] ([MaKH])
@@ -664,10 +677,6 @@ REFERENCES [dbo].[HoSoPhapLy] ([MaHoSo])
 GO
 ALTER TABLE [dbo].[TinhTrangHoSoPhapLy] CHECK CONSTRAINT [fk_TinhTrangHoSoPhapLy_MaHoSo]
 GO
-ALTER TABLE [dbo].[CanHo]  WITH CHECK ADD  CONSTRAINT [ck_CanHo_MaCanHo] CHECK  (([MaCanHo] like 'CH%'))
-GO
-ALTER TABLE [dbo].[CanHo] CHECK CONSTRAINT [ck_CanHo_MaCanHo]
-GO
 ALTER TABLE [dbo].[ChamCong]  WITH CHECK ADD  CONSTRAINT [ck_ChamCongThoiGian] CHECK  (([GioVao]<=[GioRa]))
 GO
 ALTER TABLE [dbo].[ChamCong] CHECK CONSTRAINT [ck_ChamCongThoiGian]
@@ -678,13 +687,9 @@ ALTER TABLE [dbo].[ChiNhanh] CHECK CONSTRAINT [ck_ChiNhanh_MaChiNhanh]
 GO
 ALTER TABLE [dbo].[ChiTiet_DonHang]  WITH CHECK ADD CHECK  (([CongViec]=N'Ký hợp đồng' OR [CongViec]=N'Gọi Nguồn' OR [CongViec]=N'Dẫn Khách'))
 GO
-ALTER TABLE [dbo].[ChiTiet_NhanVien]  WITH CHECK ADD  CONSTRAINT [ck_ChiTiet_NhanVien_CheDo] CHECK  (([CheDo]='PartTime' OR [CheDo]='FullTime'))
+ALTER TABLE [dbo].[ChiTietNhuCau]  WITH CHECK ADD  CONSTRAINT [ck_ChiTietNhuCau_MaChiTiet] CHECK  (([MaChiTiet] like 'CT%'))
 GO
-ALTER TABLE [dbo].[ChiTiet_NhanVien] CHECK CONSTRAINT [ck_ChiTiet_NhanVien_CheDo]
-GO
-ALTER TABLE [dbo].[ChiTietCanHoVaNhuCau]  WITH CHECK ADD  CONSTRAINT [ck_ChiTietCanHoVaNhuCau_MaChiTiet] CHECK  (([MaChiTiet] like 'CT%'))
-GO
-ALTER TABLE [dbo].[ChiTietCanHoVaNhuCau] CHECK CONSTRAINT [ck_ChiTietCanHoVaNhuCau_MaChiTiet]
+ALTER TABLE [dbo].[ChiTietNhuCau] CHECK CONSTRAINT [ck_ChiTietNhuCau_MaChiTiet]
 GO
 ALTER TABLE [dbo].[ChiTietSP]  WITH CHECK ADD  CONSTRAINT [ck_ChiTietSP_GiayToPhapLy] CHECK  (([GiayToPhapLy]=N'Viết Tay' OR [GiayToPhapLy]=N'Sổ Hồng' OR [GiayToPhapLy]=N'Hợp Đồng Mua Bán'))
 GO
@@ -706,6 +711,14 @@ ALTER TABLE [dbo].[DonHang]  WITH CHECK ADD  CONSTRAINT [ck_DonHang_MaDH] CHECK 
 GO
 ALTER TABLE [dbo].[DonHang] CHECK CONSTRAINT [ck_DonHang_MaDH]
 GO
+ALTER TABLE [dbo].[DonHang]  WITH CHECK ADD  CONSTRAINT [ck_DonHang_MaThanhToan] CHECK  (([MaThanhToan] like 'TT%'))
+GO
+ALTER TABLE [dbo].[DonHang] CHECK CONSTRAINT [ck_DonHang_MaThanhToan]
+GO
+ALTER TABLE [dbo].[Du_An]  WITH CHECK ADD  CONSTRAINT [ck_Du_An_MaDuAN] CHECK  (([MaDuAn] like 'DA%'))
+GO
+ALTER TABLE [dbo].[Du_An] CHECK CONSTRAINT [ck_Du_An_MaDuAN]
+GO
 ALTER TABLE [dbo].[HoSoPhapLy]  WITH CHECK ADD  CONSTRAINT [ck_HoSoPhapLy_MaHoSo] CHECK  (([MaHoSO] like 'HS%'))
 GO
 ALTER TABLE [dbo].[HoSoPhapLy] CHECK CONSTRAINT [ck_HoSoPhapLy_MaHoSo]
@@ -717,10 +730,6 @@ GO
 ALTER TABLE [dbo].[KhaiThacKhachMuaVaThue]  WITH CHECK ADD  CONSTRAINT [ck_KhaiThacKhachMuaVaThue_CapThiet] CHECK  (([CapThiet]=(3) OR [CapThiet]=(2) OR [CapThiet]=(1)))
 GO
 ALTER TABLE [dbo].[KhaiThacKhachMuaVaThue] CHECK CONSTRAINT [ck_KhaiThacKhachMuaVaThue_CapThiet]
-GO
-ALTER TABLE [dbo].[LichLamViec]  WITH CHECK ADD  CONSTRAINT [ck_LichLamViec_CaLam] CHECK  (([CaLam]='Full' OR [CaLam]='Chieu' OR [CaLam]='Sang'))
-GO
-ALTER TABLE [dbo].[LichLamViec] CHECK CONSTRAINT [ck_LichLamViec_CaLam]
 GO
 ALTER TABLE [dbo].[NhanVien]  WITH CHECK ADD  CONSTRAINT [ck_NhanVien_MaNV] CHECK  (([MaNV]='RP%' OR [MaNV]='MKT%' OR [MaNV]='S%'))
 GO
