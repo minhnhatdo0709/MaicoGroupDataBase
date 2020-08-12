@@ -1,0 +1,508 @@
+@page "/nhucau"
+
+@attribute [Authorize]
+@inject ICustomerNeedsServices CNservice;
+@inject IProjectServices PJservice;
+@using System.Linq;
+
+<MatButton OnClick = "@OpenDialog" Raised="true" Outlined="true">Add Customer</MatButton>
+
+@if(listCustomerNeeds == null || listProject == null)
+{
+    <MatProgressBar Indeterminate="true"></MatProgressBar>
+}
+else
+{
+    <MatTable Descending="true" Items="@listGroupedCustomerneeds" class="mat-elevation-z5" >
+                                                        
+                                                         
+        <MatTableHeader>
+            <th>Date</th>
+            <th>CustomerID</th>
+            <th>UrgencyLevel</th>
+            <th>Finance</th>
+            <th>Comment</th>
+            <th>Status</th>
+            <th>Type</th>
+            <th>ProjectInterested</th>
+            <th>SDT</th>
+
+            <th>Actions</th>
+
+        </MatTableHeader>
+        <MatTableRow >
+            <td>@context.Date</td>
+            <td>@context.CustomerId</td>
+            <td>@context.UrgencyLevel</td>
+            <td>@context.Finance</td>
+            <td>@context.Comment</td>
+            <td>@context.Status</td>
+            <td>
+                @if(@context.RentOrBuy){
+                    <text>Buy</text>
+                }
+                else{
+                    <text>Rent</text>
+                }
+            </td>
+            <td>@context.ProjectInterested</td>
+            <td>@context.Customer.PhoneNumber</td>
+            <td>
+                @if (context.Furniture != null || context.NeedsDetail != null)
+                {
+                    <MatIconButton  Icon="launch" OnClick="@(() => OpenDetailDialog(context))"></MatIconButton>
+                }
+                else{
+                    <MatIconButton Icon="launch" Disabled="true"></MatIconButton>
+                }
+                <MatIconButton Icon="history" OnClick="@(() => getHistory(context.CustomerId))"></MatIconButton>
+            </td>
+        </MatTableRow>
+    </MatTable>
+
+    <MatDialog IsOpen="@isDialogOpen" Class="mat-elevation-z5" >
+        <MatDialogTitle>Add Customer</MatDialogTitle>
+        <MatDialogContent>
+            <EditForm Model="@customerNeeds" OnValidSubmit="HandleValidSubmit">
+                <DataAnnotationsValidator/>
+                <ValidationMessage For="@(() => customerNeeds.NeedsDetail)"></ValidationMessage>
+                <MatTabGroup>
+                    <MatTab Label="Cơ Bản">
+                        <div class ="form-group">
+                            <MatTextField @bind-Value="@customerNeeds.CustomerId" Label="Customer ID"></MatTextField>
+                            <ValidationMessage For="@(() => customerNeeds.CustomerId)"></ValidationMessage>
+                        </div>
+                        <div class ="form-group">
+                            <MatSubtitle1>Urgency Level: @customerNeeds.UrgencyLevel</MatSubtitle1>
+                            <MatSlider TValue="short" @bind-Value="@customerNeeds.UrgencyLevel" EnableStep="true" Step="1" ValueMin="1" ValueMax="3" Discrete="true" Pin="true" Markers="true" Immediate="true"></MatSlider>
+                            <ValidationMessage For="@(() => customerNeeds.UrgencyLevel)"></ValidationMessage>
+                        </div>
+                        <div class ="form-group">
+                            <MatSubtitle1>Finance: @customerNeeds.Finance</MatSubtitle1>
+                            <MatSlider TValue="decimal" @bind-Value="@customerNeeds.Finance" EnableStep="true" Step="10" ValueMin="100" ValueMax="3000" Discrete="true" Pin="true" Immediate="true"></MatSlider>
+                            <ValidationMessage For="@(() => customerNeeds.Finance)"></ValidationMessage>
+                        </div>
+                        <div class ="form-group">
+                            <MatTextField @bind-Value="@customerNeeds.Comment" Label="Comment" TextArea="true"></MatTextField>
+                            <ValidationMessage For="@(() => customerNeeds.Comment)"></ValidationMessage>
+                        </div>
+                        <div class ="form-group">
+                            <MatSelect @bind-Value="@customerNeeds.Status" Label="Status">
+                                <MatOptionString Value="Chưa Khai Thác">Chưa Khai Thác</MatOptionString>
+                                <MatOptionString Value="Đang Khai Thác">Đang Khai Thác</MatOptionString>
+                                <MatOptionString Value="Đang Dẫn Xem Nhà">Đang Dẫn Xem Nhà</MatOptionString>
+                                <MatOptionString Value="Sẽ Chốt">Sẽ Chốt</MatOptionString>
+                                <MatOptionString Value="Đã Chốt">Đã Chốt</MatOptionString>
+                                <MatOptionString Value="Hết Nhu cầu">Hết Nhu cầu</MatOptionString>
+                            </MatSelect>
+                            <ValidationMessage For="@(() => customerNeeds.Status)"></ValidationMessage>
+                        </div>
+                        <div class ="form-group">
+                            <MatSelect @bind-Value="@customerNeeds.RentOrBuy" Label="Phân Loại">
+                                <MatOption TValue="bool" Value="true">Mua</MatOption>
+                                <MatOption TValue="bool" Value="false">Thuê</MatOption>
+                            </MatSelect>
+                            <ValidationMessage For="@(() => customerNeeds.RentOrBuy)"></ValidationMessage>
+                        </div>
+                        <div class ="form-group">
+                            <MatSelect @bind-Value="@customerNeeds.ProjectInterested" Label="Project Interested">
+                                @foreach (var item in listProject)
+                                {
+                                    <MatOption TValue="int" Value="@item.Id">@item.Name</MatOption>
+                                }
+                                
+                            </MatSelect>
+                            <ValidationMessage For="@(() => customerNeeds.ProjectInterested)"></ValidationMessage>
+                        </div>
+                        <div class ="form-group">
+                            <MatSelect @bind-Value="@customerNeeds.Source" Label="Source">
+                                <MatOptionString Value="Sale Office">Sale Office</MatOptionString>
+                                <MatOptionString Value="Dẫn Khách">Sale Dẫn Khách</MatOptionString>
+                            </MatSelect>
+                            <ValidationMessage For="@(() => customerNeeds.Source)"></ValidationMessage>
+                        </div>
+                    </MatTab>
+
+                    <MatTab Label="Chi Tiết">
+                        <div class ="form-group">
+                            <MatSubtitle1>Room Area: @customerNeeds.NeedsDetail.RoomArea</MatSubtitle1>
+                            <MatSlider TValue="short" @bind-Value="@customerNeeds.NeedsDetail.RoomArea" Discrete="true" EnableStep="true" Step="1" ValueMin="0" ValueMax="150" Immediate="true"></MatSlider>
+                            <ValidationMessage For="@(() => customerNeeds.NeedsDetail.RoomArea)"></ValidationMessage>
+                        </div>
+                        <div class ="form-group">
+                            <MatSelect @bind-Value="@customerNeeds.NeedsDetail.IsNew" Label="Mua mới hay cũ?">
+                                <MatOption TValue="bool?" Value="true">Mới</MatOption>
+                                <MatOption TValue="bool?" Value="false">Cũ</MatOption>
+                            </MatSelect>
+                            <ValidationMessage For="@(() => customerNeeds.NeedsDetail.IsNew)"></ValidationMessage>
+                        </div>
+                        <div class ="form-group">
+                            <MatSelect @bind-Value="@customerNeeds.NeedsDetail.Direction" Label="Direction">
+                                <MatOptionString Value="Đông Nam"> Đông Nam</MatOptionString>
+                                <MatOptionString Value="Tây Bắc">Tây Bắc</MatOptionString>
+                            </MatSelect>
+                            <ValidationMessage For="@(() => customerNeeds.NeedsDetail.Direction)"></ValidationMessage>
+                        </div>
+                        <div class ="form-group">
+                            <MatTextField @bind-Value="@customerNeeds.NeedsDetail.View" Label="View"></MatTextField>
+                            <ValidationMessage For="@(() => customerNeeds.NeedsDetail.View)"></ValidationMessage>
+                        </div>
+                        <div class ="form-group">
+                            <MatSelect @bind-Value="@customerNeeds.NeedsDetail.BedRoom" Label="Bedroom">
+                                <MatOption TValue="short?" Value="1">1</MatOption>
+                                <MatOption TValue="short?" Value="2">2</MatOption>
+                                <MatOption TValue="short?" Value="3">3</MatOption>
+                                <MatOption TValue="short?" Value="4">4</MatOption>
+                            </MatSelect>
+                            <ValidationMessage For="@(() => customerNeeds.NeedsDetail.BedRoom)"></ValidationMessage>
+                        </div>
+                        <div class ="form-group">
+                            <MatSelect @bind-Value="@customerNeeds.NeedsDetail.WC" Label="WC">
+                                <MatOption TValue="short?" Value="1">1</MatOption>
+                                <MatOption TValue="short?" Value="2">2</MatOption>
+                                <MatOption TValue="short?" Value="3">3</MatOption>
+                            </MatSelect>
+                            <ValidationMessage For="@(() => customerNeeds.NeedsDetail.WC)"></ValidationMessage>
+                        </div>
+                        <div class ="form-group">
+                            <MatTextField @bind-Value="@customerNeeds.NeedsDetail.Floor" Label="Floor"></MatTextField>
+                            <ValidationMessage For="@(() => customerNeeds.NeedsDetail.Floor)"></ValidationMessage>
+                        </div>
+                    </MatTab>
+
+                    <MatTab Label="Nội Thất">
+                        <div class ="form-group">
+                            <MatCheckbox @bind-Value="@customerNeeds.Furniture.Curtain" Label="Curtain"></MatCheckbox>
+                            <ValidationMessage For="@(() => customerNeeds.Furniture.Curtain)"></ValidationMessage>
+                        </div>
+                        <div class ="form-group">
+                            <MatCheckbox @bind-Value="@customerNeeds.Furniture.WashingManchine" Label="Washing Machine"></MatCheckbox>
+                            <ValidationMessage For="@(() => customerNeeds.Furniture.WashingManchine)"></ValidationMessage>
+                        </div>
+                        <div class ="form-group">
+                            <MatCheckbox @bind-Value="@customerNeeds.Furniture.WaterHeater" Label="Water Heater"></MatCheckbox>
+                            <ValidationMessage For="@(() => customerNeeds.Furniture.WaterHeater)"></ValidationMessage>
+                        </div>
+                        <div class ="form-group">
+                            <MatCheckbox @bind-Value="@customerNeeds.Furniture.Bed" Label="Bed"></MatCheckbox>
+                            <ValidationMessage For="@(() => customerNeeds.Furniture.Bed)"></ValidationMessage>
+                        </div>
+                        <div class ="form-group">
+                            <MatCheckbox @bind-Value="@customerNeeds.Furniture.TablesChairs" Label="Tables and Chairs"></MatCheckbox>
+                            <ValidationMessage For="@(() => customerNeeds.Furniture.TablesChairs)"></ValidationMessage>
+                        </div>
+                        <div class ="form-group">
+                            <MatCheckbox @bind-Value="@customerNeeds.Furniture.ClotheslineRigs" Label="Clothesline Rigs"></MatCheckbox>
+                            <ValidationMessage For="@(() => customerNeeds.Furniture.ClotheslineRigs)"></ValidationMessage>
+                        </div>
+                        <div class ="form-group">
+                            <MatCheckbox @bind-Value="@customerNeeds.Furniture.AirConditioner" Label="Air Conditioner"></MatCheckbox>
+                            <ValidationMessage For="@(() => customerNeeds.Furniture.AirConditioner)"></ValidationMessage>
+                        </div>
+                        <div class ="form-group">
+                            <MatCheckbox @bind-Value="@customerNeeds.Furniture.Wardrobe" Label="Wardrobe"></MatCheckbox>
+                            <ValidationMessage For="@(() => customerNeeds.Furniture.Wardrobe)"></ValidationMessage>
+                        </div>
+                    </MatTab>
+                </MatTabGroup>
+                <MatButton Type="submit" Label="Submit" Raised="true"></MatButton>
+            </EditForm>
+        </MatDialogContent>
+        <MatDialogActions>
+            <MatButton OnClick="@CloseDialog" Outlined="true">Close</MatButton>
+        </MatDialogActions>
+    </MatDialog>
+}
+
+
+
+<!--History-->
+@if(listHistory != null){
+    <MatDialog IsOpen="@isHistoryDialogOpen" Class="mat-elevation-z5">
+        <MatDialogTitle>Lich su nhu cau cua khach hang.</MatDialogTitle>
+        <MatDialogContent>
+            <MatTable Descending="true" Items="@listHistory" class="mat-elevation-z5" >                                                  
+                <MatTableHeader>
+                    <th>Date</th>
+                    <th>CustomerID</th>
+                    <th>UrgencyLevel</th>
+                    <th>Finance</th>
+                    <th>Comment</th>
+                    <th>Status</th>
+                    <th>Type</th>
+                    <th>ProjectInterested</th>
+                    <th>Source</th>
+
+                    <th>Actions</th>
+
+                </MatTableHeader>
+                <MatTableRow >
+                    <td>@context.Date</td>
+                    <td>@context.CustomerId</td>
+                    <td>@context.UrgencyLevel</td>
+                    <td>@context.Finance</td>
+                    <td>@context.Comment</td>
+                    <td>@context.Status</td>
+                    <td>
+                        @if(@context.RentOrBuy){
+                            <text>Buy</text>
+                        }
+                        else{
+                            <text>Rent</text>
+                        }
+                    </td>
+                    <td>@context.ProjectInterested</td>
+                    @* <td>@context.Source</td> *@
+                    <td>
+                        @if (context.Furniture != null || context.NeedsDetail != null)
+                        {
+                            <MatIconButton  Icon="launch" OnClick="@(() => OpenDetailDialog(context))"></MatIconButton>
+                        }
+                        else{
+                            <MatIconButton Icon="launch" Disabled="true"></MatIconButton>
+                        }
+                    </td>
+                </MatTableRow>
+            </MatTable>
+
+        </MatDialogContent>
+        <MatDialogActions>
+            <MatButton OnClick="@CloseDialog">Close</MatButton>
+        </MatDialogActions>
+    </MatDialog>
+}
+
+
+<!---NeedsDetails--->
+@if (needsDetail != null || furniture != null)
+{
+    <MatDialog IsOpen="@isDetailOpen" Class="mat-elevation-z5" >
+        <MatDialogTitle>Customer Needs Detail</MatDialogTitle>
+        <MatDialogContent>
+            <MatList TwoLine="true" SingleSelection="true"> 
+                
+                @if(needsDetail != null){
+                    <div class="mat-layout-grid">
+                        <div class="mat-layout-grid-inner">
+                            <div class="mat-layout-grid-cell">
+                                <MatListItem>
+                                    <MatListItemText>
+                                        <MatListItemPrimaryText>@needsDetail.RoomArea</MatListItemPrimaryText>
+                                        <MatListItemSecondaryText>Dien Tich</MatListItemSecondaryText>
+                                    </MatListItemText>
+                                </MatListItem>
+                                
+                                <MatListItem>
+                                    <MatListItemText>
+                                        <MatListItemPrimaryText>
+                                            @if(needsDetail.IsNew == null){
+                                                <text>Mới cũ đều được.</text>
+                                            }
+                                            else if(needsDetail.IsNew == false){
+                                                <text>Nhà cũ.</text>
+                                            }
+                                            else{
+                                                <text>Muốn nhà Mới.</text>
+                                            }
+                                        </MatListItemPrimaryText>
+                                        <MatListItemSecondaryText>Nhu cầu</MatListItemSecondaryText>
+                                    </MatListItemText>
+                                </MatListItem>
+
+                                @if(needsDetail.Direction != null){
+                                    <MatListItem>
+                                        <MatListItemText>
+                                            <MatListItemPrimaryText>@needsDetail.Direction</MatListItemPrimaryText>
+                                            <MatListItemSecondaryText>Hướng</MatListItemSecondaryText>
+                                        </MatListItemText>
+                                    </MatListItem>
+                                }
+                            </div>
+                            <div class="mat-layout-grid-cell">
+                                @if(needsDetail.View != null){
+                                    <MatListItem>
+                                        <MatListItemText>
+                                            <MatListItemPrimaryText>@needsDetail.View</MatListItemPrimaryText>
+                                            <MatListItemSecondaryText>View</MatListItemSecondaryText>
+                                        </MatListItemText>
+                                    </MatListItem>
+                                }
+                                @if(needsDetail.BedRoom != null){
+                                    <MatListItem>
+                                        <MatListItemText>
+                                            <MatListItemPrimaryText>@needsDetail.BedRoom</MatListItemPrimaryText>
+                                            <MatListItemSecondaryText>Số Phòng Ngủ.</MatListItemSecondaryText>
+                                        </MatListItemText>
+                                    </MatListItem>
+                                }
+                                @if(needsDetail.WC != null){
+                                    <MatListItem>
+                                        <MatListItemText>
+                                            <MatListItemPrimaryText>@needsDetail.WC</MatListItemPrimaryText>
+                                            <MatListItemSecondaryText>Số Phòng WC</MatListItemSecondaryText>
+                                        </MatListItemText>
+                                    </MatListItem>
+                                }
+                                @if(needsDetail.Floor != null){
+                                    <MatListItem>
+                                        <MatListItemText>
+                                            <MatListItemPrimaryText>@needsDetail.Floor</MatListItemPrimaryText>
+                                            <MatListItemSecondaryText>Tầng mong muốn</MatListItemSecondaryText>
+                                        </MatListItemText>
+                                    </MatListItem>
+                                }
+                            </div>
+                        </div>
+                    </div> 
+
+                    
+                    
+                }
+                @if(furniture != null){
+                    <MatListItem>
+                        <MatListItemText>
+                            <MatListItemPrimaryText>
+                                @if (@furniture.AirConditioner)
+                                {
+                                    <text>Máy lạnh, </text>
+                                }
+                                @if (@furniture.Bed)
+                                {
+                                    <text>Giường, </text>
+                                }
+                                @if (@furniture.ClotheslineRigs)
+                                {
+                                    <text>Giá phơi đồ, </text>
+                                }
+                                @if (@furniture.Curtain)
+                                {
+                                    <text>Rèm, </text>
+                                }
+                                @if (@furniture.TablesChairs)
+                                {
+                                    <text>Bộ bàn ghế, </text>
+                                }
+                                @if (@furniture.Wardrobe)
+                                {
+                                    <text>Tủ đổ, </text>
+                                }
+                                @if (@furniture.WashingManchine)
+                                {
+                                    <text>Máy giặt, </text>
+                                }
+                                @if (@furniture.WaterHeater)
+                                {
+                                    <text>Máy nước nóng, </text>
+                                }
+                            </MatListItemPrimaryText>
+                            <MatListItemSecondaryText>Nội thất mong muốn.</MatListItemSecondaryText>
+                        </MatListItemText>
+                    </MatListItem>
+                }
+                   
+            </MatList>
+        </MatDialogContent>
+        <MatDialogActions>
+            <MatButton OnClick="@CloseDetailDialog">Close</MatButton>
+        </MatDialogActions>
+    </MatDialog>
+
+}
+
+
+@code
+{
+    #region GetData
+    List<Customerneeds> listCustomerNeeds;
+
+    #endregion
+
+    #region Add Customer
+        bool isDialogOpen = false;
+        Customerneeds customerNeeds = new Customerneeds();
+        void HandleValidSubmit()
+        {
+            //customerNeeds.Finance = customerNeeds.Finance * 1000000000;
+            if (customerNeeds.NeedsDetail.BedRoom == null && customerNeeds.NeedsDetail.Direction == null &&
+                customerNeeds.NeedsDetail.Floor == null && customerNeeds.NeedsDetail.IsNew == null &&
+                customerNeeds.NeedsDetail.RoomArea == 0 && customerNeeds.NeedsDetail.View == null &&
+                customerNeeds.NeedsDetail.WC == null)
+            {
+                customerNeeds.NeedsDetail = null;
+            }
+            if (customerNeeds.Furniture.Bed == false && customerNeeds.Furniture.AirConditioner == false
+                && customerNeeds.Furniture.ClotheslineRigs == false && customerNeeds.Furniture.Curtain == false
+                && customerNeeds.Furniture.TablesChairs == false && customerNeeds.Furniture.Wardrobe == false
+                && customerNeeds.Furniture.WashingManchine == false && customerNeeds.Furniture.WaterHeater == false)
+            {
+
+                customerNeeds.Furniture = null;
+            }
+            var newCustomer = CNservice.Add(customerNeeds);
+            listCustomerNeeds.Add(newCustomer);
+            updateGrouped();
+            CloseDialog();
+        }
+        void OpenDialog()
+        {
+            isDialogOpen = true;
+            customerNeeds = new Customerneeds();
+            customerNeeds.EmployeeId = 1;
+        }
+        void CloseDialog()
+        {
+            isDialogOpen = false;
+            isHistoryDialogOpen = false;
+        }
+    #endregion
+
+    #region Get Project
+    List<Project> listProject;
+
+    #endregion
+
+    #region NeedsDetailDialog
+        bool isDetailOpen = false;
+        NeedsDetail needsDetail;
+        Furniture furniture;
+
+        public void OpenDetailDialog(Customerneeds cn)
+        {
+            isDetailOpen = true;
+            needsDetail = cn.NeedsDetail;
+            furniture = cn.Furniture;
+        }
+        public void CloseDetailDialog()
+        {
+            isDetailOpen = false;
+        }
+    #endregion
+    
+    #region HistoryDialog
+        List<Customerneeds> listGroupedCustomerneeds;
+
+        void updateGrouped(){
+            listGroupedCustomerneeds = listCustomerNeeds.OrderByDescending(c => c.Date)
+                                                        .GroupBy(c => c.CustomerId)
+                                                        .Select(g => g.OrderByDescending(c=> c.Date).FirstOrDefault()).ToList();
+        }
+    
+        List<Customerneeds> listHistory;
+        bool isHistoryDialogOpen = false;
+        void getHistory(int id){
+            listHistory = listCustomerNeeds.Where(g => g.CustomerId == id).OrderByDescending(c => c.Date).ToList();
+            isHistoryDialogOpen = true;
+        }
+
+    #endregion
+    protected override async Task OnInitializedAsync()
+    {
+        listCustomerNeeds = await CNservice.GetAll();
+        listProject = await PJservice.GetAll();
+
+        updateGrouped();
+                                                    
+        
+        
+    }
+}
